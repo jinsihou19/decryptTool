@@ -1,9 +1,14 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by vito on 15/11/9.
@@ -28,6 +33,40 @@ public class tool {
     public tool() {
         tab1SaveBtn.setEnabled(false);
         tab2SaveBtn.setEnabled(false);
+        tab1TextArea.setDragEnabled(true);
+        tab1TextArea.setTransferHandler(new TransferHandler() {
+            private static final long serialVersionUID = 1L;
+
+            public boolean importData(JComponent c, Transferable t) {
+                try {
+                    List<File> fileList = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
+                    File file = fileList.get(0);
+                    if (file.isFile()) {
+                        if (!file.getName().endsWith(".xml")) {
+                            tempFile = file;
+                            tab1url.setText(file.getAbsolutePath());
+                            String text = DecryptTool.decryptToString(file.getAbsoluteFile());
+                            tab1TextArea.setText(text);
+                            tab1SaveBtn.setEnabled(true);
+                        } else {
+                            tab1TextArea.setText("配置文件请使用插件配置文件查看。");
+                        }
+                    }
+                    return true;
+                } catch (UnsupportedFlavorException ufe) {
+                    ufe.printStackTrace();
+                    return true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+
+            public boolean canImport(JComponent c, DataFlavor[] flavors) {
+                return true;
+            }
+        });
+
         //Tab1内容开始
         openFile.addActionListener(new ActionListener() {
             @Override
@@ -78,6 +117,40 @@ public class tool {
         //Tab1内容结束
 
         //以下是Tab2的内容
+        tab2TextArea.setDragEnabled(true);
+        tab2TextArea.setTransferHandler(new TransferHandler() {
+            private static final long serialVersionUID = 1L;
+            public boolean importData(JComponent c, Transferable t) {
+                try {
+                    List<File> fileList = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
+                    File file = fileList.get(0);
+                    if (file.isFile()) {
+                        configFile = file;
+                        tab2Url.setText(file.getAbsolutePath());
+                        String text = DecryptTool.readPluginConfig(file);
+                        if (DecryptTool.configIsLock(text)) {
+                            text = DecryptTool.decryptConfig(text);
+
+                            tab2CheckBox.setSelected(true);
+                        }
+                        tab2TextArea.setText(text);
+                        tab2SaveBtn.setEnabled(true);
+                    }
+                    return true;
+                } catch (UnsupportedFlavorException ufe) {
+                    ufe.printStackTrace();
+                    return true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+
+            public boolean canImport(JComponent c, DataFlavor[] flavors) {
+                return true;
+            }
+        });
+
         tab2OpenFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -94,6 +167,7 @@ public class tool {
                     String text = DecryptTool.readPluginConfig(file);
                     if (DecryptTool.configIsLock(text)) {
                         text = DecryptTool.decryptConfig(text);
+
                         tab2CheckBox.setSelected(true);
                     }
                     tab2TextArea.setText(text);

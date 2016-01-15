@@ -6,12 +6,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/8.0/lib/base-basic-project-8.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../finereport/lib/8.0/lib/base-basic-project-8.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -20,7 +20,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/8.0/lib/base-stable-project-8.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../finereport/lib/8.0/lib/base-stable-project-8.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
